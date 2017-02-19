@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "510240613520",
+    "firebase_url": "https://arnabsmassanger.firebaseio.com",
+    "project_id": "arnabsmassanger",
+    "storage_bucket": "arnabsmassanger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510240613520:android:78225e72b2d425c1",
+        "android_client_info": {
+          "package_name": "com.example.akundu.arnabsmessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510240613520-2nr8bp4tiq6kbktv04iia55jf0hrmh0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.akundu.arnabsmessenger",
+            "certificate_hash": "CB6A0B8BA919B044C1E499C2E3B3A78223A5F580"
+          }
+        },
+        {
+          "client_id": "510240613520-n3019p6hhojongq0m2cp22jcrn9b7r02.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB29CRcJ_5LIOSyIMDm3nTOYK4F9FOa3vQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510240613520-n3019p6hhojongq0m2cp22jcrn9b7r02.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
