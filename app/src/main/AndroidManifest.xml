@@ -36,9 +36,6 @@
             android:label="Contacts">
 
         </activity>
-        <activity android:name=".CropActivity">
-
-        </activity>
     </application>
 
 </manifest>
