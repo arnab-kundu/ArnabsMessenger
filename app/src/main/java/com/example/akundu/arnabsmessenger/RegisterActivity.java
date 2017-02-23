@@ -2,10 +2,15 @@ package com.example.akundu.arnabsmessenger;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,10 +34,10 @@ public class RegisterActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
     ProgressDialog progressDialog;
+    Animation animation;
     private EditText etName, etEmail, etPassword, etConfirmPassword;
     private String email;
     private String password;
-    Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait.....");
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        animation = AnimationUtils.loadAnimation(this,R.anim.shake_horizontal);
+        animation = AnimationUtils.loadAnimation(this, R.anim.shake_horizontal);
 
         etConfirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -65,19 +70,26 @@ public class RegisterActivity extends AppCompatActivity {
         if (etName.getText().toString().equals("")) {
             etName.startAnimation(animation);
             etName.requestFocus();
-        }else if (email.equals("")) {
+        } else if (email.equals("")) {
             etEmail.startAnimation(animation);
             etEmail.requestFocus();
-        }else if (password.equals("")||password.length()<6) {
+        } else if (password.equals("") || password.length() < 6) {
             etPassword.startAnimation(animation);
             etPassword.requestFocus();
-        }else if (etConfirmPassword.getText().toString().equals("")||password.length()<6) {
+        } else if (etConfirmPassword.getText().toString().equals("") || password.length() < 6) {
             etConfirmPassword.startAnimation(animation);
             etConfirmPassword.requestFocus();
         } else if (!etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) {
             Toast.makeText(this, "Password mismatch", Toast.LENGTH_SHORT).show();
             etPassword.setText("");
             etConfirmPassword.setText("");
+        } else if (!checkInternet()) {
+            Snackbar.make(findViewById(R.id.reg),"No Internet",Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            }).setActionTextColor(Color.RED).show();
         } else {
             progressDialog.show();
             firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -90,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     firebaseUser = firebaseAuth.getCurrentUser();
-                                    UserInformation userInformation = new UserInformation(etName.getText().toString(), etEmail.getText().toString(),firebaseUser.getUid(),"offline");
+                                    UserInformation userInformation = new UserInformation(etName.getText().toString(), etEmail.getText().toString(), firebaseUser.getUid(), "offline");
                                     databaseReference.child("AllUserInfo").child(firebaseUser.getUid()).setValue(userInformation);
                                 } else {
                                     Log.d("msg", "some error");
@@ -110,5 +122,15 @@ public class RegisterActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    public boolean checkInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        } else
+            return false;
     }
 }
