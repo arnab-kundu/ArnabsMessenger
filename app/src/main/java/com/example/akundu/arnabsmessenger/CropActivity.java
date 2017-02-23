@@ -1,18 +1,25 @@
 package com.example.akundu.arnabsmessenger;
 
+import android.*;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,12 +38,12 @@ import java.io.IOException;
 public class CropActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST = 1;
-    private ImageView resultView;
-    private String filepath = "";
-    private boolean flag;
     private final int CAMERA_PIC_REQUEST = 100;
     Bitmap bitmap;
     String cameraOrCrop;
+    private ImageView resultView;
+    private String filepath = "";
+    private boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +51,14 @@ public class CropActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crop);
         resultView = (ImageView) findViewById(R.id.result_image);
         cameraOrCrop = getIntent().getExtras().getString("value");
-        if (cameraOrCrop.equals("CROP")) {
+        checkPermission();
+      /*  if (cameraOrCrop.equals("CROP")) {
             Crop.pickImage(this);
         } else if (cameraOrCrop.equals("CAMERA")) {
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent, CAMERA_PIC_REQUEST);
-        }
+        }*/
+
 
     }
 
@@ -63,7 +72,8 @@ public class CropActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_select) {
             resultView.setImageDrawable(null);
-            Crop.pickImage(this);
+            checkPermission();
+            //Crop.pickImage(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -79,7 +89,7 @@ public class CropActivity extends AppCompatActivity {
 
             upload();
 
-        } else if (requestCode == CAMERA_PIC_REQUEST && resultCode==RESULT_OK) {
+        } else if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             bitmap = (Bitmap) result.getExtras().get("data");
             filepath = saveImageFile(bitmap);
             upload();
@@ -178,11 +188,12 @@ public class CropActivity extends AppCompatActivity {
         finish();
     }
 
-   /* private void checkPermission() {
+    private void checkPermission() {
         int var = Build.VERSION.SDK_INT;
         if (var >= 23) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    |ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     if (flag) {
                         Snackbar.make(findViewById(R.id.result_image), "Storage permission is required to open Images.", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("OK", new View.OnClickListener() {
@@ -193,22 +204,54 @@ public class CropActivity extends AppCompatActivity {
                                     }
                                 }).show();
                     } else {
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
+                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST);
+                    }
+                }else  if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    if (flag) {
+                        Snackbar.make(findViewById(R.id.result_image), "Camera permission is required to take picture.", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        flag = false;
+                                        checkPermission();
+                                    }
+                                }).show();
+                    } else {
+                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST);
                     }
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST);
+                }
+            }else {
+                if (cameraOrCrop.equals("CROP")) {
+                    Crop.pickImage(this);
+                } else if (cameraOrCrop.equals("CAMERA")) {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, CAMERA_PIC_REQUEST);
                 }
             }
-        } else
-            Crop.pickImage(this);
+        } else {
+            if (cameraOrCrop.equals("CROP")) {
+                Crop.pickImage(this);
+            } else if (cameraOrCrop.equals("CAMERA")) {
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_PIC_REQUEST);
+            }
+        }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     //  Toast.makeText(this, "yay", Toast.LENGTH_SHORT).show();
-                    Crop.pickImage(this);
+                    if (cameraOrCrop.equals("CROP")) {
+                        Crop.pickImage(this);
+                    } else if (cameraOrCrop.equals("CAMERA")) {
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, CAMERA_PIC_REQUEST);
+                    }
                 } else {
                     //Toast.makeText(this, "boo", Toast.LENGTH_SHORT).show();
                     flag = true;
@@ -216,5 +259,5 @@ public class CropActivity extends AppCompatActivity {
                 }
             }
         }
-    }*/
+    }
 }
