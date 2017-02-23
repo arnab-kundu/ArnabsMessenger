@@ -100,8 +100,16 @@ public class FriendListActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(byte[] bytes) {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            profilePic.setImageBitmap(bmp);
+                             try {
+                                System.gc();
+                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                profilePic.setImageBitmap(bmp);
+                                bmp=null;
+                            } catch (OutOfMemoryError e) {
+                                e.printStackTrace();
+                                Log.e("msg",""+e);
+                                // handle gracefully.
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
