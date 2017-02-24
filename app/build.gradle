@@ -18,10 +18,10 @@ android {
         }
     }
 }
-ext{
-    supportLibraryVersion='24.2.1'
-    firebaseLibraryVersion='10.0.0'
-    firebaseUiLibraryVersion='1.0.1'
+ext {
+    supportLibraryVersion = '24.2.1'
+    firebaseLibraryVersion = '10.0.0'
+    firebaseUiLibraryVersion = '1.0.1'
 }
 
 dependencies {
@@ -35,6 +35,10 @@ dependencies {
     compile "com.google.firebase:firebase-storage:$firebaseLibraryVersion"
     compile "com.firebaseui:firebase-ui-database:$firebaseUiLibraryVersion"
     compile project(':crop')
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
 
 /*dependencies {
@@ -48,5 +52,9 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:10.0.0'
     compile 'com.firebaseui:firebase-ui-database:1.0.1'
     compile project(':crop')
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }*/
 apply plugin: 'com.google.gms.google-services'

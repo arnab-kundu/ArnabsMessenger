@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,18 @@ public class AmessengerApplication extends Application implements Application.Ac
 
     public AmessengerApplication() {
         registerActivityLifecycleCallbacks(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+        // Normal app init code...
     }
 
     @Override
