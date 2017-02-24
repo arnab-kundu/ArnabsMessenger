@@ -1,6 +1,5 @@
 package com.example.akundu.arnabsmessenger;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -227,6 +226,7 @@ public class CropActivity extends AppCompatActivity {
                     Crop.pickImage(this);
                 } else if (cameraOrCrop.equals("CAMERA")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                     startActivityForResult(intent, CAMERA_PIC_REQUEST);
                 }
             }
@@ -235,6 +235,7 @@ public class CropActivity extends AppCompatActivity {
                 Crop.pickImage(this);
             } else if (cameraOrCrop.equals("CAMERA")) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                 startActivityForResult(intent, CAMERA_PIC_REQUEST);
             }
         }
@@ -250,6 +251,7 @@ public class CropActivity extends AppCompatActivity {
                         Crop.pickImage(this);
                     } else if (cameraOrCrop.equals("CAMERA")) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                         startActivityForResult(intent, CAMERA_PIC_REQUEST);
                     }
                 } else {
