@@ -1,6 +1,5 @@
 package com.example.akundu.arnabsmessenger;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -91,7 +90,13 @@ public class CropActivity extends AppCompatActivity {
 
         } else if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             bitmap = (Bitmap) result.getExtras().get("data");
-            filepath = saveImageFile(bitmap);
+
+            Bitmap output;
+            if (bitmap.getWidth() >= bitmap.getHeight())
+                output = Bitmap.createBitmap(bitmap, bitmap.getWidth() / 2 - bitmap.getHeight() / 2, 0, bitmap.getHeight(), bitmap.getHeight());
+            else
+                output = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight() / 2 - bitmap.getWidth() / 2, bitmap.getWidth(), bitmap.getWidth());
+            filepath = saveImageFile(output);
             upload();
         }
     }
@@ -227,6 +232,7 @@ public class CropActivity extends AppCompatActivity {
                     Crop.pickImage(this);
                 } else if (cameraOrCrop.equals("CAMERA")) {
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                       intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                     startActivityForResult(intent, CAMERA_PIC_REQUEST);
                 }
             }
@@ -235,6 +241,7 @@ public class CropActivity extends AppCompatActivity {
                 Crop.pickImage(this);
             } else if (cameraOrCrop.equals("CAMERA")) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                   intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                 startActivityForResult(intent, CAMERA_PIC_REQUEST);
             }
         }
@@ -250,6 +257,7 @@ public class CropActivity extends AppCompatActivity {
                         Crop.pickImage(this);
                     } else if (cameraOrCrop.equals("CAMERA")) {
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                           intent.putExtra("android.intent.extras.CAMERA_FACING",1);
                         startActivityForResult(intent, CAMERA_PIC_REQUEST);
                     }
                 } else {
