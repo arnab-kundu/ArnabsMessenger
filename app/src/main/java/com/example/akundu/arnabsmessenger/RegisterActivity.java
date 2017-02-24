@@ -34,10 +34,10 @@ public class RegisterActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
     ProgressDialog progressDialog;
+    Animation animation;
     private EditText etName, etEmail, etPassword, etConfirmPassword;
     private String email;
     private String password;
-    Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
             etPassword.setText("");
             etConfirmPassword.setText("");
         } else if (!checkInternet()) {
-            Snackbar.make(findViewById(R.id.pwd), "No Internet", Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.reg),"No Internet",Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
