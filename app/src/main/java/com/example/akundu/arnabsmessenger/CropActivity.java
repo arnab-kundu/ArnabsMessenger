@@ -1,6 +1,5 @@
 package com.example.akundu.arnabsmessenger;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
