@@ -25,7 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//import com.firebase.ui.database.FirebaseListAdapter;
+
 public class FriendListActivity extends AppCompatActivity {
 
     DatabaseReference databaseReference, friendDatabaseReference;
@@ -52,6 +53,8 @@ public class FriendListActivity extends AppCompatActivity {
     private String filepath = "";
     private StorageReference mStorageReference, mDownloadStorageReference;
     private boolean doubleBackToExitPressedOnce = false;
+    HashMap<String, Bitmap> U_id_Image_HashMap = new HashMap<>();
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,34 +93,39 @@ public class FriendListActivity extends AppCompatActivity {
 
             firebaseListAdapter = new FirebaseListAdapter<Friend>(this, Friend.class, R.layout.row_friend_list, friendDatabaseReference) {
                 @Override
-                protected void populateView(View v, Friend model, int position) {
+                protected void populateView(View v, final Friend model, int position) {
 
 
                     final ImageView profilePic = (ImageView) v.findViewById(R.id.profile_pic);
-                    StorageReference islandRef = mDownloadStorageReference.child("image/" + model.getU_id());
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            // Data for "images/island.jpg" is returns, use this as needed
-                            try {
-                                System.gc();
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                profilePic.setImageBitmap(bmp);
-                                bmp=null;
-                            } catch (OutOfMemoryError e) {
-                                e.printStackTrace();
-                                Log.e("msg",""+e);
-                                // handle gracefully.
+                    Bitmap bitmap = U_id_Image_HashMap.get(model.getU_id());
+                    if (bitmap == null) {
+                        StorageReference islandRef = mDownloadStorageReference.child("image/" + model.getU_id());
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                // Data for "images/island.jpg" is returns, use this as needed
+                                try {
+                                    System.gc();
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    profilePic.setImageBitmap(bmp);
+                                    U_id_Image_HashMap.put(model.getU_id(), bmp);
+                                    bmp = null;
+                                } catch (OutOfMemoryError e) {
+                                    e.printStackTrace();
+                                    Log.e("msg", "" + e);
+                                    // handle gracefully.
+                                }
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
+                    } else {
+                        profilePic.setImageBitmap(bitmap);
+                    }
 
                     TextView name = (TextView) v.findViewById(R.id.cardviewname);
                     TextView address = (TextView) v.findViewById(R.id.cardviewaddress);
@@ -146,7 +154,7 @@ public class FriendListActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     TextView frndNameTextView = (TextView) view.findViewById(R.id.cardviewname);
                     frndNameTextView.getText().toString();
-                    final Intent intent = new Intent(FriendListActivity.this, ListchatActivity.class);
+                    intent = new Intent(FriendListActivity.this, ListchatActivity.class);
                     intent.putExtra("frnd_id", frndId.get(i));
                     intent.putExtra("u_id", AmessengerApplication.appfirebaseUser.getUid());
                     intent.putExtra("frnd_name", frndNameTextView.getText().toString());
@@ -161,8 +169,8 @@ public class FriendListActivity extends AppCompatActivity {
                                 builder.setPositiveButton("Take Picture", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(FriendListActivity.this,CropActivity.class);
-                                        intent.putExtra("value","CAMERA");
+                                        Intent intent = new Intent(FriendListActivity.this, CropActivity.class);
+                                        intent.putExtra("value", "CAMERA");
                                         startActivity(intent);
                                         finish();
                                     }
@@ -171,7 +179,7 @@ public class FriendListActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent1 = new Intent(FriendListActivity.this, CropActivity.class);
-                                        intent1.putExtra("value","CROP");
+                                        intent1.putExtra("value", "CROP");
                                         startActivity(intent1);
                                         finish();
                                     }

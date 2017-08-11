@@ -33,7 +33,7 @@ dependencies {
     compile "com.google.firebase:firebase-auth:$firebaseLibraryVersion"
     compile "com.google.firebase:firebase-database:$firebaseLibraryVersion"
     compile "com.google.firebase:firebase-storage:$firebaseLibraryVersion"
-    compile "com.firebaseui:firebase-ui-database:$firebaseUiLibraryVersion"
+    //compile "com.firebaseui:firebase-ui-database:$firebaseUiLibraryVersion"
     compile project(':crop')
 }
 

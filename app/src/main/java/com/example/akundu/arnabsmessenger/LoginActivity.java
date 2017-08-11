@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     boolean show = true;
     private ImageButton showHidePasswordButton;
     private RelativeLayout relativeLayoutEdittextPassword;
+    private TextView tv_forgot_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.password);
         showHidePasswordButton = (ImageButton) findViewById(R.id.show_hide);
         cbSaveUser = (CheckBox) findViewById(R.id.save_user);
+        tv_forgot_password = (TextView) findViewById(R.id.tv_forgot_password);
         progressDialog = new ProgressDialog(this, android.app.AlertDialog.THEME_HOLO_DARK);
         progressDialog.setMessage("Please wait.....");
         progressDialog.setCancelable(false);
@@ -89,6 +91,18 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 login(findViewById(R.id.login));
                 return false;
+            }
+        });
+
+        tv_forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = etEmail.getText().toString().trim();
+                if(email.equalsIgnoreCase("")){
+                    Toast.makeText(LoginActivity.this, "Please Enter Your Email Id and then Retry", Toast.LENGTH_SHORT).show();
+                }else {
+                    forgotPasswordAlertDialog(email);
+                }
             }
         });
     }
@@ -148,23 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                         etPassword.setText("");
                         Toast.makeText(LoginActivity.this, "Wrong Email or Password!", Toast.LENGTH_SHORT).show();
                         if (count >= 3) {
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this, R.style.MyDatePickerStyle);
-                            //alertDialog.setTitle("Forgot password");
-                            alertDialog.setMessage("Do you want to reset your password?");
-                            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseAuth.sendPasswordResetEmail(email);
-                                    Toast.makeText(LoginActivity.this, "Password reset mail will be sent to your Email in few minutes.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            });
-                            alertDialog.show();
+                            forgotPasswordAlertDialog(email);
                         }
                     }
                 }
@@ -178,6 +176,26 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }).setActionTextColor(Color.RED).show();
         }
+    }
+
+    private void forgotPasswordAlertDialog(final String email) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this, R.style.MyDatePickerStyle);
+        //alertDialog.setTitle("Forgot password");
+        alertDialog.setMessage("Do you want to reset your password?");
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                firebaseAuth.sendPasswordResetEmail(email);
+                Toast.makeText(LoginActivity.this, "Password reset mail will be sent to your Email in few minutes.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialog.show();
     }
 
     public void register(View view) {
