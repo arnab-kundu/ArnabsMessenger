@@ -45,16 +45,16 @@ import java.util.Map;
 
 public class FriendListActivity extends AppCompatActivity {
 
-    DatabaseReference databaseReference, friendDatabaseReference;
-    ListView friendListView;
-    ArrayList<String> frndId = new ArrayList<>();
-    ProgressBar progressBar;
-    FirebaseListAdapter firebaseListAdapter;
+    private DatabaseReference databaseReference, friendDatabaseReference;
+    private ListView friendListView;
+    private ArrayList<String> frndId = new ArrayList<>();
+    private ProgressBar progressBar;
+    private FirebaseListAdapter firebaseListAdapter;
     private String filepath = "";
     private StorageReference mStorageReference, mDownloadStorageReference;
     private boolean doubleBackToExitPressedOnce = false;
-    HashMap<String, Bitmap> U_id_Image_HashMap = new HashMap<>();
-    Intent intent;
+    private HashMap<String, Bitmap> U_id_Image_HashMap = new HashMap<>();
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +81,7 @@ public class FriendListActivity extends AppCompatActivity {
                     Map<String, String> stringStringMap = (Map<String, String>) dataSnapshot.getValue();
                     Log.d("msg", stringStringMap.get("name"));
                     AmessengerApplication.username = stringStringMap.get("name");
+
                 }
 
                 @Override
@@ -153,11 +154,10 @@ public class FriendListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     TextView frndNameTextView = (TextView) view.findViewById(R.id.cardviewname);
-                    frndNameTextView.getText().toString();
-                    intent = new Intent(FriendListActivity.this, ListchatActivity.class);
-                    intent.putExtra("frnd_id", frndId.get(i));
-                    intent.putExtra("u_id", AmessengerApplication.appfirebaseUser.getUid());
-                    intent.putExtra("frnd_name", frndNameTextView.getText().toString());
+                    //frndNameTextView.getText().toString();
+                    Log.d("msgUID", AmessengerApplication.appfirebaseUser.getUid());
+                    Log.d("msg frndId", frndId.get(i));
+                    Log.d("msg counter", i + "");
                     if (frndId.get(i).equals(AmessengerApplication.appfirebaseUser.getUid())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(FriendListActivity.this, R.style.MyDatePickerStyle);
                         builder.setMessage("Would you like to change Profile picture?");
@@ -190,10 +190,15 @@ public class FriendListActivity extends AppCompatActivity {
                         builder.setNegativeButton("No", null);
                         builder.show();
                     } else {
+                        intent = new Intent(FriendListActivity.this, ListchatActivity.class);
+                        intent.putExtra("frnd_id", frndId.get(i));
+                        intent.putExtra("u_id", AmessengerApplication.appfirebaseUser.getUid());
+                        intent.putExtra("frnd_name", frndNameTextView.getText().toString());
                         startActivity(intent);
                     }
                 }
             });
+
         }
     }
 
@@ -322,6 +327,9 @@ public class FriendListActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.d("msg FriendList", "onStop");
+
+        firebaseListAdapter=null;
+
 
     }
 
