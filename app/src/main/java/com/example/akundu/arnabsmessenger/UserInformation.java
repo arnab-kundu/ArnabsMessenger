@@ -5,8 +5,8 @@ class UserInformation {
 
     public String name;
     public String address;
-    String u_id;
-    String online;
+    public String u_id;
+    public String online;
 
     public UserInformation() {
     }
