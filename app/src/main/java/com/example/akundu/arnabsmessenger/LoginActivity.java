@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         AmessengerApplication.appfirebaseAuth = firebaseAuth;
         if (AmessengerApplication.appfirebaseAuth.getCurrentUser()!= null) {
             Log.d("msggggg",""+AmessengerApplication.appfirebaseAuth);
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo").child(AmessengerApplication.appfirebaseAuth.getCurrentUser().getUid());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo").child(Objects.requireNonNull(AmessengerApplication.appfirebaseAuth.getCurrentUser()).getUid());
             HashMap<String, Object> hashMap = new HashMap<String, Object>();
             hashMap.put("online", "offline");
             if (AmessengerApplication.appfirebaseAuth.getCurrentUser() != null)
