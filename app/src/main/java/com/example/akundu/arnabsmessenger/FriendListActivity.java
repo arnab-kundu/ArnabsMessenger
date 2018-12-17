@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-//import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListAdapter;
 
 public class FriendListActivity extends AppCompatActivity {
 

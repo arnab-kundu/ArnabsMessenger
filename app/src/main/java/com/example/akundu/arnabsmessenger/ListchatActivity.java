@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-//import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,8 +35,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListchatActivity extends AppCompatActivity {
 
@@ -328,6 +326,27 @@ public class ListchatActivity extends AppCompatActivity {
         });
     }
 
+    public void callDelay() {
+        Thread thread = new Thread();
+        try {
+            thread.sleep(5000);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void oldSubmitMsg() {
+        if (!uid.equals(frndId) && !msg.getText().toString().equals("")) {
+            //String date = new SimpleDateFormat("hh:mm a dd/MM/yy").format(new Date(System.currentTimeMillis()));
+            String date = new SimpleDateFormat("hh:mm a").format(new Date(System.currentTimeMillis()));
+            Massage massage = new Massage(AmessengerApplication.username, msg.getText().toString().trim(), date);
+            uidDatabaseRef.child(frndId).child(System.currentTimeMillis() + "").setValue(massage);
+            msgDatabaseReference.child(frndId).child(uid).child(System.currentTimeMillis() + "").setValue(massage);
+            msg.setText("");
+        }
+    }
+
     class NetworkTask extends AsyncTask<Void, Void, String> {
 
         @Override
@@ -351,25 +370,5 @@ public class ListchatActivity extends AppCompatActivity {
             super.onPostExecute(s);
         }
 
-    }
-    public void callDelay() {
-        Thread thread = new Thread();
-        try {
-            thread.sleep(5000);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void oldSubmitMsg() {
-        if (!uid.equals(frndId) && !msg.getText().toString().equals("")) {
-            //String date = new SimpleDateFormat("hh:mm a dd/MM/yy").format(new Date(System.currentTimeMillis()));
-            String date = new SimpleDateFormat("hh:mm a").format(new Date(System.currentTimeMillis()));
-            Massage massage = new Massage(AmessengerApplication.username, msg.getText().toString().trim(), date);
-            uidDatabaseRef.child(frndId).child(System.currentTimeMillis() + "").setValue(massage);
-            msgDatabaseReference.child(frndId).child(uid).child(System.currentTimeMillis() + "").setValue(massage);
-            msg.setText("");
-        }
     }
 }
