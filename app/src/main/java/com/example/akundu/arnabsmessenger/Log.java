@@ -5,7 +5,7 @@ package com.example.akundu.arnabsmessenger;
  */
 
 public class Log {
-    public static final boolean LOG = false;
+    private static final boolean LOG = false;
 
     public static void i(String tag, String string) {
         if (LOG)
@@ -17,7 +17,7 @@ public class Log {
             android.util.Log.e(tag, string);
     }
 
-    public static void d(String tag, String string) {
+    static void d(String tag, String string) {
         if (LOG)
             android.util.Log.d(tag, string);
     }

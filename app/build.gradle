@@ -21,7 +21,7 @@ android {
 }
 ext{
     supportLibraryVersion='27.1.0'//Used old version to avoid some gradle issues
-    firebaseLibraryVersion='10.0.0'
+    firebaseLibraryVersion='16.0.5'
     firebaseUiLibraryVersion='1.0.1'
 }
 
@@ -37,6 +37,7 @@ dependencies {
     implementation "com.google.firebase:firebase-storage:$firebaseLibraryVersion"
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiLibraryVersion"
     api project(':crop')
+    //https://dl.google.com/dl/android/maven2/index.html
 }
 
 /*dependencies {

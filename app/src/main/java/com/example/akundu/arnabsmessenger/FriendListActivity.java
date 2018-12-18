@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -41,11 +41,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-
 public class FriendListActivity extends AppCompatActivity {
 
-    private DatabaseReference databaseReference, friendDatabaseReference;
+    private final String TAG = FriendListActivity.class.getSimpleName();
+
     private ListView friendListView;
     private ArrayList<String> frndId = new ArrayList<>();
     private ProgressBar progressBar;
@@ -69,7 +68,7 @@ public class FriendListActivity extends AppCompatActivity {
             progressBar = (ProgressBar) findViewById(R.id.progress_bar);
             mStorageReference = FirebaseStorage.getInstance().getReference();
             mDownloadStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://arnabsmassanger.appspot.com");
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo").child(AmessengerApplication.appfirebaseAuth.getCurrentUser().getUid());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo").child(AmessengerApplication.appfirebaseAuth.getCurrentUser().getUid());
             Map<String, Object> hasMap = new HashMap<>();
             hasMap.put("online", "online");
             databaseReference.updateChildren(hasMap);
@@ -79,7 +78,7 @@ public class FriendListActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     friendListView.setVisibility(View.VISIBLE);
                     Map<String, String> stringStringMap = (Map<String, String>) dataSnapshot.getValue();
-                    Log.d("msg", stringStringMap.get("name"));
+                    Log.d("msg " + TAG, stringStringMap.get("name"));
                     AmessengerApplication.username = stringStringMap.get("name");
 
                 }
@@ -89,7 +88,7 @@ public class FriendListActivity extends AppCompatActivity {
 
                 }
             });
-            friendDatabaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo");
+            DatabaseReference friendDatabaseReference = FirebaseDatabase.getInstance().getReference().child("AllUserInfo");
             friendListView = (ListView) findViewById(R.id.friend_list);
 
             firebaseListAdapter = new FirebaseListAdapter<Friend>(this, Friend.class, R.layout.row_friend_list, friendDatabaseReference) {
@@ -133,12 +132,16 @@ public class FriendListActivity extends AppCompatActivity {
                     ImageView online = (ImageView) v.findViewById(R.id.online);
                     name.setText(model.getName());
                     address.setText(model.getAddress());
-                    if (model.getOnline().equals("online")) {
-                        online.setImageResource(android.R.drawable.presence_online);
-                    } else if (model.getOnline().equals("offline")) {
-                        online.setImageResource(android.R.drawable.presence_offline);
-                    } else {
-                        online.setImageResource(android.R.drawable.presence_away);
+                    switch (model.getOnline()) {
+                        case "online":
+                            online.setImageResource(android.R.drawable.presence_online);
+                            break;
+                        case "offline":
+                            online.setImageResource(android.R.drawable.presence_offline);
+                            break;
+                        default:
+                            online.setImageResource(android.R.drawable.presence_away);
+                            break;
                     }
                     frndId.add(model.getU_id());
                     if (AmessengerApplication.appfirebaseUser != null) {
@@ -328,7 +331,7 @@ public class FriendListActivity extends AppCompatActivity {
         super.onStop();
         Log.d("msg FriendList", "onStop");
 
-        firebaseListAdapter=null;
+        firebaseListAdapter = null;
 
 
     }
