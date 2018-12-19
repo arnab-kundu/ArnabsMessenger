@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FriendListActivity extends AppCompatActivity {
 
     private final String TAG = FriendListActivity.class.getSimpleName();
@@ -96,7 +98,7 @@ public class FriendListActivity extends AppCompatActivity {
                 protected void populateView(View v, final Friend model, int position) {
 
 
-                    final ImageView profilePic = (ImageView) v.findViewById(R.id.profile_pic);
+                    final CircleImageView profilePic = (CircleImageView) v.findViewById(R.id.profile_pic);
                     Bitmap bitmap = U_id_Image_HashMap.get(model.getU_id());
                     if (bitmap == null) {
                         StorageReference islandRef = mDownloadStorageReference.child("image/" + model.getU_id());
