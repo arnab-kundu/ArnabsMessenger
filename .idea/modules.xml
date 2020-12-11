@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ArnabsMessenger.iml" filepath="$PROJECT_DIR$/.idea/ArnabsMessenger.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/crop/crop.iml" filepath="$PROJECT_DIR$/crop/crop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ArnabsMessenger.iml" filepath="$PROJECT_DIR$/.idea/modules/ArnabsMessenger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArnabsMessenger.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArnabsMessenger.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crop/ArnabsMessenger.crop.iml" filepath="$PROJECT_DIR$/.idea/modules/crop/ArnabsMessenger.crop.iml" />
     </modules>
   </component>
 </project>
