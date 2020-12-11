@@ -10,7 +10,7 @@
     tools:context="com.example.akundu.arnabsmessenger.ListchatActivity">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -30,7 +30,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/color_hint" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"

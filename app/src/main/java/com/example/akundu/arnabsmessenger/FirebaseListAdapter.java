@@ -16,7 +16,7 @@ package com.example.akundu.arnabsmessenger;
 
 
 import android.app.Activity;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
